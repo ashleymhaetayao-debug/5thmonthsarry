@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthsary Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #d7ccc8; 
+            font-family: 'Quicksand', sans-serif;
+            color: #3e2723; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .brown-card {
+            background: #efebe9; 
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #a1887f;
+            box-shadow: 8px 8px 0px #8d6e63;
+            text-align: center;
+            width: 340px;
+            z-index: 10;
+        }
+        .handwritten-title, #question-text, .letter-text p {
+            font-family: 'Dancing Script', cursive;
+        }
+        #question-text { font-size: 24px; font-weight: bold; }
+        #countdown { font-size: 30px; font-weight: bold; color: #5d4037; margin-top: 15px; }
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #8d6e63;
+            border-radius: 8px;
+            background: #fdfaf9;
+        }
+        button {
+            background: #6d4c41;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .letter-text {
+            text-align: left;
+            max-height: 450px;
+            overflow-y: auto;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .icon { font-size: 40px; margin-bottom: 10px; }
+        .heart-fly {
+            position: absolute;
+            color: #8d6e63;
+            pointer-events: none;
+            animation: fly 3s linear forwards;
+        }
+        @keyframes fly {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="timer-container" class="brown-card">
+    <div class="icon">⏳</div>
+    <h2>Masyado ka pang excited, Baby!</h2>
+    <p>Mabubuksan mo lang ito sa mismong Monthsary natin.</p>
+    <div id="countdown"></div>
+</div>
+
+<div id="quiz-container" class="brown-card" style="display:none;">
+    <div class="icon">🔒</div>
+    <h2 id="quiz-title">Relationship Check</h2>
+    <p id="question-text">Loading...</p>
+    <input type="text" id="answer-input" placeholder="Sulat mo dito yung sagot...">
+    <br>
+    <button onclick="checkAnswer()">Unlock Next ✨</button>
+    <p id="feedback"></p>
+</div>
+
+<div id="letter-container" style="display:none;">
+    <div class="brown-card">
+        <div class="icon">❤️</div>
+        <h2 class="handwritten-title">HAPPY 5TH MONTHSARRY PO BABY! 🌹</h2>
+        <div class="letter-text">
+            <p>OMG, 5 months na tayo and parang 5 years na HAHAHA I know naman na di lang years ang itatagal natin diba? Lifetime yan!</p>
+            <p>Alam mo kahit minsan napagsasabihan kita and nasasabihan kitang nadidisappoint ako, excited parin ako laging lapitan at kausapin moko dahil I know gagaan ang loob though minsan yoko muna (playing hard to get hihi)...</p>
+            <p>Always mong iisiping kahit ayaw ng lahat sayo o pinahihirapan ka ng lahat ng nakapaligid sayo, nandito ako na handang samahan ka, saluhin ka, at samahang tumawa at kahit umiyak pa.</p>
+            <p>Wag na wag mong iisiping mawawala ako ah? Kasi kahit ako inaamin ko hindi ko talaga kaya at hindi ko maimagine na mangyayari yan.</p>
+            <p>Mahal na mahal kita sana mag-enjoy po tayo ngayong Monthsarry natin (ma-excite ka sa gift ko!) at sana mahalin lang natin ang isa't isa kahit maging bulate papo tayo (kimi lang bawal yorn~~).</p>
+            <p><strong>I love you very much baby! Ikaw lang po gusto kong mahalin at kainisan HAHAHAH mwaaaaa.....</strong></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // TARGET DATE: Feb 27, 2026, 12:00 AM
+    const unlockDate = new Date(2026, 1, 27, 0, 0, 0); 
+
+    const questions = [
+        { q: "Anong exact date naging tayo?", a: "september 27" },
+        { q: "Anong food ang una kong binili para sayo?", a: "spaghetti" },
+        { q: "Anong part mo ang lagi kong sinasabing maganda?", a: "pilikmata" }
+    ];
+
+    let currentQ = 0;
+
+    function updateTimer() {
+        const now = new Date();
+        const diff = unlockDate - now;
+
+        if (diff <= 0) {
+            document.getElementById('timer-container').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            loadQuestion();
+        } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('countdown').innerHTML = hours + "h " + mins + "m " + secs + "s";
+            setTimeout(updateTimer, 1000);
+        }
+    }
+
+    function loadQuestion() {
+        document.getElementById('question-text').innerHTML = questions[currentQ].q;
+    }
+
+    function checkAnswer() {
+        let userAns = document.getElementById('answer-input').value.trim().toLowerCase();
+        let correctAns = questions[currentQ].a.toLowerCase();
+        
+        if(userAns === correctAns) {
+            currentQ++;
+            if(currentQ < questions.length) {
+                document.getElementById('feedback').innerHTML = "Galing! Next question... 🤎";
+                document.getElementById('answer-input').value = "";
+                loadQuestion();
+            } else {
+                unlockLetter();
+            }
+        } else {
+            document.getElementById('feedback').innerHTML = "Mali baby! Isip ka pa... 😋";
+        }
+    }
+
+    function unlockLetter() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('letter-container').style.display = 'block';
+        setInterval(createHeart, 300);
+    }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-fly');
+        heart.innerHTML = '🤎'; 
+        heart.style.left = Math.random() * 100 + 'vw';
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 3000);
+    }
+
+    updateTimer();
+</script>
+
+</body>
+</html>
